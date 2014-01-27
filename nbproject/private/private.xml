@@ -4,10 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/sumit/Projects/CourseWork/DCSimulation/src/common_classes/Video.java</file>
-            <file>file:/home/sumit/Projects/CourseWork/DCSimulation/src/common_classes/GenerateVideos.java</file>
-            <file>file:/home/sumit/Projects/CourseWork/DCSimulation/videos.txt</file>
-            <file>file:/home/sumit/Projects/CourseWork/DCSimulation/src/common_classes/VideosLoader.java</file>
-            <file>file:/home/sumit/Projects/CourseWork/DCSimulation/src/server_classes/MainServer.java</file>
+            <file>file:/home/sumit/Projects/CourseWork/DCSimulation/src/server_classes/ClusterTransmitTools.java</file>
+            <file>file:/home/sumit/Projects/CourseWork/DCSimulation/src/server_classes/BasicServerThread.java</file>
         </group>
     </open-files>
 </project-private>
