@@ -2,8 +2,12 @@ package server_classes;
 
 import common_classes.ClusteringTools;
 import common_classes.CommonUtils;
+import common_classes.IPFunctions;
 import common_classes.Video;
 import common_classes.VideosLoader;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -41,7 +45,7 @@ public class MainServer {
             for (Video v : cluster) {
                 sum += v.size;
             }
-            System.out.printf("CLUSTER %d:%nSize = %d%n", n, sum);
+            System.out.printf("CLUSTER %d:%nSize = %d%n", n+1, sum);
             System.out.println("Videos in cluster:");
             for (Video v : cluster) {
                 System.out.printf("%d ", v.videoID);
@@ -49,6 +53,25 @@ public class MainServer {
             System.out.println();
             CommonUtils.printDelimiter();
             n++;
+        }
+        
+        try{
+            System.out.println("Which port to use for this Main Server?");
+            int port = sc.nextInt();
+            ServerSocket serverSocket = new ServerSocket(port);
+            String IP = IPFunctions.getFirstNonLoopbackAddress().toString();
+            System.out.println("Main Server running at:");
+            System.out.printf("IP Address: %s%n", IP);
+            System.out.printf("PORT Address: %d%n", port);
+            CommonUtils.printDelimiter();
+            for(int proxies = 0; proxies<noOfClusters;proxies++){
+                Socket s = serverSocket.accept();
+                Thread basicServerThread = new Thread(new BasicServerTransmitThread(s, clusters.get(proxies)));
+                basicServerThread.start();
+            }
+        }catch(IOException ioe){
+            System.err.println("Error creating server socket in main server");
+            ioe.printStackTrace();
         }
     }
 }
