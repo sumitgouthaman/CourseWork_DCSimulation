@@ -3,7 +3,9 @@ package server_classes;
 import common_classes.CommonUtils;
 import common_classes.IPFunctions;
 import common_classes.Video;
+import common_classes.VideoCache;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -66,6 +68,26 @@ public class ProxyServer {
             }
 
             s.close();
+
+            System.out.println("Enter capacity for cache: ");
+            int cacheCapacity = sc.nextInt();
+            VideoCache cache = new VideoCache(cacheCapacity);
+            try {
+                ServerSocket serverSocket = new ServerSocket(port);
+                while (true) {
+                    s = serverSocket.accept();
+                    Scanner requestSocketScanner = new Scanner(s.getInputStream());
+                    requestSocketScanner.nextLine();
+                    int requestVideoID = Integer.parseInt(requestSocketScanner.nextLine());
+                    requestSocketScanner.nextLine();
+                    VideoServeThread vst = new VideoServeThread(s, requestVideoID, videos, cache, mainServerIP, mainServerPort);
+                    Thread t = new Thread(vst);
+                    t.start();
+                }
+            } catch (Exception e) {
+                System.err.println("Error while serving requests");
+                e.printStackTrace();
+            }
         } catch (IOException ioe) {
             System.err.println("Error with initial payload trasfer socket in Proxy Server");
             ioe.printStackTrace();

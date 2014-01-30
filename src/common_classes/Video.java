@@ -46,6 +46,17 @@ public class Video implements Comparable<Video> {
             ioe.printStackTrace();
         }
     }
+    public void transmitWithHeader(Socket s) {
+        try {
+            PrintWriter pw = new PrintWriter(s.getOutputStream(), true);
+            pw.println("START-VIDEO");
+            transmit(pw);
+            pw.println("END-VIDEO");
+        } catch (IOException ioe) {
+            System.err.println("Error creating PrintWriter from SOcket in Video class");
+            ioe.printStackTrace();
+        }
+    }
 
     public static String serialize(Video v) {
         return v.videoID + ";" + v.size;
@@ -66,4 +77,5 @@ public class Video implements Comparable<Video> {
     public String toString(){
         return String.format("{ Video ID: %d, Size: %d }", videoID, size);
     }
+    
 }
