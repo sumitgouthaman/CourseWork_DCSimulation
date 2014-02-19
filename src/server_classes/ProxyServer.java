@@ -30,6 +30,9 @@ public class ProxyServer {
         System.out.println("Proxy server running at:");
         System.out.printf("IP Address: %s%n", IP);
         System.out.printf("PORT Address: %d%n", port);
+        System.out.println("Enter capacity for cache: ");
+        int cacheCapacity = sc.nextInt();
+        VideoCache cache = new VideoCache(cacheCapacity);
         CommonUtils.printDelimiter();
         System.out.println("Contacting Main Server....");
         try {
@@ -69,9 +72,6 @@ public class ProxyServer {
 
             s.close();
 
-            System.out.println("Enter capacity for cache: ");
-            int cacheCapacity = sc.nextInt();
-            VideoCache cache = new VideoCache(cacheCapacity);
             try {
                 ServerSocket serverSocket = new ServerSocket(port);
                 while (true) {

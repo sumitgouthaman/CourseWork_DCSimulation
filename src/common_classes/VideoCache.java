@@ -26,6 +26,7 @@ public class VideoCache {
                 cache.remove(v);
                 cache.add(v);
                 System.out.printf("Got video %d from cache%n", v.videoID);
+                break;
             }
         }
         if (video == null) {
@@ -37,21 +38,23 @@ public class VideoCache {
     public synchronized void put(Video v) {
         if (filled + v.size <= capacity) {
             cache.add(v);
-            System.out.printf("Video %d added to cache%n", v.videoID);
+            filled += v.size;
+            System.out.printf("++++ Video %d added to cache%n", v.videoID);
         } else {
             if (cache.size() > 0) {
                 Video firstVideo = cache.get(0);
                 if (filled - firstVideo.size + v.size <= capacity) {
-                    cache.remove(0);
+                    Video removed = cache.remove(0);
+                    System.out.printf("---- Video %d removed from cache%n", removed.videoID);
                     cache.add(v);
                     filled = filled - firstVideo.size + v.size;
-                    System.out.printf("Video %d added to cache%n", v.size);
+                    System.out.printf("++++ Video %d added to cache%n", v.videoID);
                 }
             } else {
                 if (filled + v.size <= capacity) {
                     cache.add(v);
                     filled += v.size;
-                    System.out.printf("Video %d added to cache%n", v.size);
+                    System.out.printf("++++ Video %d added to cache%n", v.videoID);
                 }
             }
         }

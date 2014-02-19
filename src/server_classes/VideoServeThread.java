@@ -34,7 +34,7 @@ public class VideoServeThread implements Runnable {
             System.out.printf("Video %d served from cache%n", videoID);
             return;
         }
-        System.out.println("Accessing from disk. Delay of 500 ms.");
+        System.out.printf("Accessing video %d from disk. Delay of 500 ms.%n", videoID);
         try {
             Thread.sleep(500);
         } catch (InterruptedException ie) {
@@ -53,7 +53,7 @@ public class VideoServeThread implements Runnable {
             cache.put(target);
             return;
         }
-        System.out.println("Not found on Disk. Will ask main server. Delay 500 ms.");
+        System.out.printf("Video %d Not found on Disk. Will ask main server. Delay 500 ms.%n", videoID);
         try {
             Thread.sleep(500);
         } catch (InterruptedException ie) {
@@ -62,12 +62,12 @@ public class VideoServeThread implements Runnable {
         }
         target = VideoRequester.fetchVideo(videoID, mainServerIP, mainServerPort);
         if (target != null) {
-            System.out.println("Video received from main server");
+            System.out.printf("Video %d received from main server%n", videoID);
             target.transmitWithHeader(s);
             System.out.printf("Video %d served from main server%n", videoID);
             cache.put(target);
             return;
         }
-        System.out.println("Couldn't find video anywhere!");
+        System.out.printf("Couldn't find video anywhere!%n", videoID);
     }
 }

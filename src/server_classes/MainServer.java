@@ -67,6 +67,9 @@ public class MainServer {
             System.out.println("Main Server running at:");
             System.out.printf("IP Address: %s%n", IP);
             System.out.printf("PORT Address: %d%n", port);
+            System.out.println("Enter capacity for cache: ");
+            int cacheCapacity = sc.nextInt();
+            VideoCache cache = new VideoCache(cacheCapacity);
             CommonUtils.printDelimiter();
             for (int proxies = 0; proxies < noOfClusters; proxies++) {
                 Socket s = serverSocket.accept();
@@ -74,9 +77,6 @@ public class MainServer {
                 basicServerThread.start();
             }
 
-            System.out.println("Enter capacity for cache: ");
-            int cacheCapacity = sc.nextInt();
-            VideoCache cache = new VideoCache(cacheCapacity);
             while (true) {
                 Socket s = serverSocket.accept();
                 Scanner requestSocketScanner = new Scanner(s.getInputStream());
