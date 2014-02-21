@@ -16,6 +16,7 @@ public class VideoServeThread implements Runnable {
     int videoID;
     String mainServerIP;
     int mainServerPort;
+    ServerMonitor sm = null;
 
     public VideoServeThread(Socket s, int videoID, Video[] videos, VideoCache cache, String mainServerIP, int mainServerPort) {
         this.s = s;
@@ -26,12 +27,22 @@ public class VideoServeThread implements Runnable {
         this.mainServerPort = mainServerPort;
     }
 
+    public void setServerMonitor(ServerMonitor sm) {
+        this.sm = sm;
+    }
+
     public void run() {
+        if (sm != null) {
+            sm.newRequest();
+        }
         System.out.printf("Request for video %d received%n", videoID);
         Video target = cache.get(videoID);
         if (target != null) {
             target.transmitWithHeader(s);
             System.out.printf("Video %d served from cache%n", videoID);
+            if (sm != null) {
+                sm.requestHandled();
+            }
             return;
         }
         System.out.printf("Accessing video %d from disk. Delay of 500 ms.%n", videoID);
@@ -51,6 +62,9 @@ public class VideoServeThread implements Runnable {
             target.transmitWithHeader(s);
             System.out.printf("Video %d served from disk%n", videoID);
             cache.put(target);
+            if (sm != null) {
+                sm.requestHandled();
+            }
             return;
         }
         System.out.printf("Video %d Not found on Disk. Will ask main server. Delay 500 ms.%n", videoID);
@@ -66,8 +80,14 @@ public class VideoServeThread implements Runnable {
             target.transmitWithHeader(s);
             System.out.printf("Video %d served from main server%n", videoID);
             cache.put(target);
+            if (sm != null) {
+                sm.requestHandled();
+            }
             return;
         }
         System.out.printf("Couldn't find video anywhere!%n", videoID);
+        if (sm != null) {
+            sm.requestHandled();
+        }
     }
 }

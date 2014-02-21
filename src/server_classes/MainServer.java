@@ -76,6 +76,12 @@ public class MainServer {
                 Thread basicServerThread = new Thread(new BasicServerTransmitThread(s, clusters.get(proxies)));
                 basicServerThread.start();
             }
+            
+            ServerMonitor sm = new ServerMonitor();
+            sm.setIPAddressPort(IP, port);
+            sm.setVisible(true);
+            sm.setName("Main Server");
+            cache.setServerMonitor(sm);
 
             while (true) {
                 Socket s = serverSocket.accept();
@@ -84,6 +90,7 @@ public class MainServer {
                 int requestVideoID = Integer.parseInt(requestSocketScanner.nextLine());
                 requestSocketScanner.nextLine();
                 VideoServeThread vst = new VideoServeThread(s, requestVideoID, videos, cache, null, 0);
+                vst.setServerMonitor(sm);
                 Thread t = new Thread(vst);
                 t.start();
             }

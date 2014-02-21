@@ -1,23 +1,30 @@
 package common_classes;
 
 import java.util.ArrayList;
+import server_classes.ServerMonitor;
 
 /**
  *
  * @author sumit
  */
 public class VideoCache {
-
+    
     public ArrayList<Video> cache;
     public int capacity;
     public int filled;
-
+    ServerMonitor sm;
+    
     public VideoCache(int capacity) {
         this.capacity = capacity;
         this.filled = 0;
         cache = new ArrayList<Video>();
     }
-
+    
+    public void setServerMonitor(ServerMonitor sm) {
+        this.sm = sm;
+        sm.updateCacheCapacity(filled, capacity);
+    }
+    
     public synchronized Video get(int videoID) {
         Video video = null;
         for (Video v : cache) {
@@ -34,7 +41,7 @@ public class VideoCache {
         }
         return video;
     }
-
+    
     public synchronized void put(Video v) {
         if (filled + v.size <= capacity) {
             cache.add(v);
@@ -58,5 +65,6 @@ public class VideoCache {
                 }
             }
         }
+        sm.updateCacheCapacity(filled, capacity);
     }
 }
