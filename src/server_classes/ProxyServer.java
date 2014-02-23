@@ -15,9 +15,9 @@ import java.util.Scanner;
  * @author sumit
  */
 public class ProxyServer {
-
+    
     static Video[] videos;
-
+    
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter port to use for this server:");
@@ -34,12 +34,16 @@ public class ProxyServer {
         int cacheCapacity = sc.nextInt();
         VideoCache cache = new VideoCache(cacheCapacity);
         CommonUtils.printDelimiter();
+        ServerMonitor sm = new ServerMonitor();
+        sm.setName("Proxy Server");
+        sm.setIPAddressPort(IP, port);
+        cache.setServerMonitor(sm);
         System.out.println("Contacting Main Server....");
         try {
             Socket s = new Socket(mainServerIP, mainServerPort);
             System.out.println("Connected to main server....");
             Scanner mainServerScanner = new Scanner(s.getInputStream());
-
+            
             ArrayList<Video> videosList = null;
             while (mainServerScanner.hasNextLine()) {
                 String response = mainServerScanner.nextLine();
@@ -69,9 +73,9 @@ public class ProxyServer {
                     }
                 }
             }
-
+            
             s.close();
-
+            
             try {
                 ServerSocket serverSocket = new ServerSocket(port);
                 while (true) {
@@ -81,6 +85,7 @@ public class ProxyServer {
                     int requestVideoID = Integer.parseInt(requestSocketScanner.nextLine());
                     requestSocketScanner.nextLine();
                     VideoServeThread vst = new VideoServeThread(s, requestVideoID, videos, cache, mainServerIP, mainServerPort);
+                    vst.setServerMonitor(sm);
                     Thread t = new Thread(vst);
                     t.start();
                 }
