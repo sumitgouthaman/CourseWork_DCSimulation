@@ -15,9 +15,9 @@ import java.util.Scanner;
  * @author sumit
  */
 public class ProxyServer {
-    
+
     static Video[] videos;
-    
+
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter port to use for this server:");
@@ -33,6 +33,11 @@ public class ProxyServer {
         System.out.println("Enter capacity for cache: ");
         int cacheCapacity = sc.nextInt();
         VideoCache cache = new VideoCache(cacheCapacity);
+        System.out.println("How many other servers are there: ");
+        int noOfOtherServers = sc.nextInt();
+        System.out.println("ID of this server: ");
+        int thisServerID = sc.nextInt() - 1;
+        ServerLoad[] otherServerLoads = new ServerLoad[noOfOtherServers];
         CommonUtils.printDelimiter();
         ServerMonitor sm = new ServerMonitor();
         sm.setName("Proxy Server");
@@ -43,7 +48,7 @@ public class ProxyServer {
             Socket s = new Socket(mainServerIP, mainServerPort);
             System.out.println("Connected to main server....");
             Scanner mainServerScanner = new Scanner(s.getInputStream());
-            
+
             ArrayList<Video> videosList = null;
             while (mainServerScanner.hasNextLine()) {
                 String response = mainServerScanner.nextLine();
@@ -73,21 +78,23 @@ public class ProxyServer {
                     }
                 }
             }
-            
+
             s.close();
-            
+
             try {
                 ServerSocket serverSocket = new ServerSocket(port);
                 while (true) {
                     s = serverSocket.accept();
                     Scanner requestSocketScanner = new Scanner(s.getInputStream());
-                    requestSocketScanner.nextLine();
-                    int requestVideoID = Integer.parseInt(requestSocketScanner.nextLine());
-                    requestSocketScanner.nextLine();
-                    VideoServeThread vst = new VideoServeThread(s, requestVideoID, videos, cache, mainServerIP, mainServerPort);
-                    vst.setServerMonitor(sm);
-                    Thread t = new Thread(vst);
-                    t.start();
+                    String HEAD = requestSocketScanner.nextLine();
+                    if (HEAD.equalsIgnoreCase("REQUEST-VIDEO")) {
+                        int requestVideoID = Integer.parseInt(requestSocketScanner.nextLine());
+                        requestSocketScanner.nextLine();
+                        VideoServeThread vst = new VideoServeThread(s, requestVideoID, videos, cache, mainServerIP, mainServerPort);
+                        vst.setServerMonitor(sm);
+                        Thread t = new Thread(vst);
+                        t.start();
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("Error while serving requests");
