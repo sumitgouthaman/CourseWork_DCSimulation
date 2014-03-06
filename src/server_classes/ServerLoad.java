@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package server_classes;
 
 /**
@@ -13,10 +8,23 @@ public class ServerLoad {
 
     public int load = 0;
     public long timestamp = 0l;
+    String IP = null;
+    int port = 0;
 
     public ServerLoad(int load, long timestamp) {
-        this.load = load;
-        this.timestamp = timestamp;
+        set(load, timestamp);
+    }
+
+    public void setIPPort(String IP, int port) {
+        this.IP = IP;
+        this.port = port;
+    }
+
+    public synchronized void set(int load, long timestamp) {
+        if (timestamp > this.timestamp) {
+            this.load = load;
+            this.timestamp = timestamp;
+        }
     }
 
     public synchronized double getNormalThreshold(ServerLoad[] loads) {

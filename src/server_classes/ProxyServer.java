@@ -33,14 +33,24 @@ public class ProxyServer {
         System.out.println("Enter capacity for cache: ");
         int cacheCapacity = sc.nextInt();
         VideoCache cache = new VideoCache(cacheCapacity);
-        System.out.println("How many other servers are there: ");
+        System.out.println("How many proxy servers are there: ");
         int noOfOtherServers = sc.nextInt();
         System.out.println("ID of this server: ");
         int thisServerID = sc.nextInt() - 1;
         ServerLoad[] otherServerLoads = new ServerLoad[noOfOtherServers];
+        System.out.println("Enter <IP> <PORT> of other servers:");
+        for (int i = 0; i < noOfOtherServers; i++) {
+            if (i == thisServerID) {
+                otherServerLoads[i].setIPPort(IP, port);
+                continue;
+            }
+            String otherIP = sc.next();
+            int otherPort = sc.nextInt();
+            otherServerLoads[i].setIPPort(otherIP, otherPort);
+        }
         CommonUtils.printDelimiter();
         ServerMonitor sm = new ServerMonitor();
-        sm.setServerName("Proxy Server");
+        sm.setServerName("Proxy Server " + (thisServerID + 1));
         sm.setIPAddressPort(IP, port);
         cache.setServerMonitor(sm);
         System.out.println("Contacting Main Server....");
@@ -93,6 +103,13 @@ public class ProxyServer {
                         VideoServeThread vst = new VideoServeThread(s, requestVideoID, videos, cache, mainServerIP, mainServerPort);
                         vst.setServerMonitor(sm);
                         Thread t = new Thread(vst);
+                        t.start();
+                    } else if (HEAD.equalsIgnoreCase("LOAD-UPDATES")) {
+                        String data = requestSocketScanner.nextLine();
+                        requestSocketScanner.nextLine();
+                        requestSocketScanner.close();
+                        ServerLoadsUpdateHandler sluh = new ServerLoadsUpdateHandler(data, otherServerLoads);
+                        Thread t = new Thread(sluh);
                         t.start();
                     }
                 }
