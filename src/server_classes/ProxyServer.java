@@ -40,7 +40,7 @@ public class ProxyServer {
         ServerLoad[] otherServerLoads = new ServerLoad[noOfOtherServers];
         CommonUtils.printDelimiter();
         ServerMonitor sm = new ServerMonitor();
-        sm.setName("Proxy Server");
+        sm.setServerName("Proxy Server");
         sm.setIPAddressPort(IP, port);
         cache.setServerMonitor(sm);
         System.out.println("Contacting Main Server....");
@@ -80,7 +80,7 @@ public class ProxyServer {
             }
 
             s.close();
-
+            sm.setVisible(true);
             try {
                 ServerSocket serverSocket = new ServerSocket(port);
                 while (true) {

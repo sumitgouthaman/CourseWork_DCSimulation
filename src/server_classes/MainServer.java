@@ -80,7 +80,7 @@ public class MainServer {
             ServerMonitor sm = new ServerMonitor();
             sm.setIPAddressPort(IP, port);
             sm.setVisible(true);
-            sm.setName("Main Server");
+            sm.setServerName("Main Server");
             cache.setServerMonitor(sm);
 
             while (true) {

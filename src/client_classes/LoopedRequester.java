@@ -18,15 +18,26 @@ public class LoopedRequester {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter <IP port> to make looped request:");
-        String IP = sc.next();
-        int port = sc.nextInt();
+        final String IP = sc.next();
+        final int port = sc.nextInt();
         while (true) {
-            int videoID = (int) (Math.random() * 100.0) + 1;
-            long start = System.currentTimeMillis();
-            Video target = VideoRequester.fetchVideo(videoID, IP, port);
-            long end = System.currentTimeMillis();
-            long delay = end - start;
-            System.out.println("Fetched video: " + target + " with delay: " + delay + " ms.");
+            Thread t = new Thread(new Runnable() {
+                public void run() {
+                    int videoID = (int) (Math.random() * 100.0) + 1;
+                    long start = System.currentTimeMillis();
+                    Video target = VideoRequester.fetchVideo(videoID, IP, port);
+                    long end = System.currentTimeMillis();
+                    long delay = end - start;
+                    System.out.println("Fetched video: " + target + " with delay: " + delay + " ms.");
+                }
+            });
+            t.start();
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException ie) {
+                System.err.println("Error sleeping inn looped requester");
+                ie.printStackTrace();
+            }
         }
     }
 }

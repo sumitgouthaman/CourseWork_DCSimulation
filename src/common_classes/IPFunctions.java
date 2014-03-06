@@ -37,6 +37,6 @@ public class IPFunctions {
                 }
             }
         }
-        return null;
+        return InetAddress.getLoopbackAddress();
     }
 }
