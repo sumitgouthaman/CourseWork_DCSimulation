@@ -56,6 +56,21 @@
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="ipAddress" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="serverLoadsField" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="OverloadThresholdLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="overloadThresholdField" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="serverLoadsLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="normalThresholdLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                      <Component id="normalThresholdField" max="32767" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -79,7 +94,21 @@
                   <Component id="currentRequestsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="currentRequests" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="45" max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="serverLoadsLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="serverLoadsField" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="normalThresholdLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="normalThresholdField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="OverloadThresholdLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="overloadThresholdField" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="27" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="ipAddressLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="ipAddress" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -175,6 +204,45 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="serverName">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="----"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="serverLoadsLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Ubuntu" size="15" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Server Loads"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="serverLoadsField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="----"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="normalThresholdLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Ubuntu" size="15" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Normal Threshold"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="normalThresholdField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="----"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="OverloadThresholdLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Ubuntu" size="15" style="1"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Overload Threshold"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="overloadThresholdField">
       <Properties>
         <Property name="text" type="java.lang.String" value="----"/>
       </Properties>

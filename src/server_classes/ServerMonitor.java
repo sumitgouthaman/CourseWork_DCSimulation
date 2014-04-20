@@ -16,38 +16,51 @@ public class ServerMonitor extends javax.swing.JFrame {
      */
     int currentRequest = 0;
     int totalRequests = 0;
-    
+
     public ServerMonitor() {
         initComponents();
     }
-    
+
     public void setServerName(String name) {
         serverName.setText(name);
     }
-    
+
     public void setIPAddressPort(String IP, int port) {
         ipAddress.setText(IP);
         this.port.setText("" + port);
     }
-    
+
     public void updateCacheCapacity(int filled, int total) {
         cacheCapacity.setText(filled + " / " + total);
     }
-    
+
     public void newRequest() {
         currentRequest++;
         totalRequests++;
         currentRequests.setText("" + currentRequest);
         updateTotalRequests();
     }
-    
+
     public void requestHandled() {
         currentRequest--;
         currentRequests.setText("" + currentRequest);
     }
-    
+
     public void updateTotalRequests() {
         totalRequestsServed.setText("" + totalRequests);
+    }
+
+    public int getLoad(){
+        return currentRequest;
+    }
+    public void updateServerLoads(ServerLoad[] serverLoads) {
+        String result = "";
+        for (int i = 0; i < serverLoads.length; i++) {
+            result += serverLoads[i].load + " || ";
+        }
+        serverLoadsField.setText(result);
+        normalThresholdField.setText(ServerLoad.getNormalThreshold(serverLoads) + "");
+        overloadThresholdField.setText(ServerLoad.getOverloadThreshold(serverLoads) + "");
     }
 
     /*
@@ -71,6 +84,12 @@ public class ServerMonitor extends javax.swing.JFrame {
         ipAddressLabel = new javax.swing.JLabel();
         ipAddress = new javax.swing.JLabel();
         serverName = new javax.swing.JLabel();
+        serverLoadsLabel = new javax.swing.JLabel();
+        serverLoadsField = new javax.swing.JLabel();
+        normalThresholdLabel = new javax.swing.JLabel();
+        normalThresholdField = new javax.swing.JLabel();
+        OverloadThresholdLabel = new javax.swing.JLabel();
+        overloadThresholdField = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,6 +124,21 @@ public class ServerMonitor extends javax.swing.JFrame {
 
         serverName.setText("----");
 
+        serverLoadsLabel.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        serverLoadsLabel.setText("Server Loads");
+
+        serverLoadsField.setText("----");
+
+        normalThresholdLabel.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        normalThresholdLabel.setText("Normal Threshold");
+
+        normalThresholdField.setText("----");
+
+        OverloadThresholdLabel.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
+        OverloadThresholdLabel.setText("Overload Threshold");
+
+        overloadThresholdField.setText("----");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -135,7 +169,19 @@ public class ServerMonitor extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(ipAddressLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(ipAddress)))
+                        .addComponent(ipAddress))
+                    .addComponent(serverLoadsField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(OverloadThresholdLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(overloadThresholdField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(serverLoadsLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(normalThresholdLabel)
+                        .addGap(34, 34, 34)
+                        .addComponent(normalThresholdField, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -153,7 +199,19 @@ public class ServerMonitor extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(currentRequestsLabel)
                     .addComponent(currentRequests))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(serverLoadsLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(serverLoadsField)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(normalThresholdLabel)
+                    .addComponent(normalThresholdField))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(OverloadThresholdLabel)
+                    .addComponent(overloadThresholdField))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ipAddressLabel)
                     .addComponent(ipAddress))
@@ -207,14 +265,20 @@ public class ServerMonitor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel OverloadThresholdLabel;
     private javax.swing.JLabel cacheCapacity;
     private javax.swing.JLabel cacheCapacityLabel;
     private javax.swing.JLabel currentRequests;
     private javax.swing.JLabel currentRequestsLabel;
     private javax.swing.JLabel ipAddress;
     private javax.swing.JLabel ipAddressLabel;
+    private javax.swing.JLabel normalThresholdField;
+    private javax.swing.JLabel normalThresholdLabel;
+    private javax.swing.JLabel overloadThresholdField;
     private javax.swing.JLabel port;
     private javax.swing.JLabel portLabel;
+    private javax.swing.JLabel serverLoadsField;
+    private javax.swing.JLabel serverLoadsLabel;
     private javax.swing.JLabel serverMonitorLabel;
     private javax.swing.JLabel serverName;
     private javax.swing.JLabel totalRequestsServed;

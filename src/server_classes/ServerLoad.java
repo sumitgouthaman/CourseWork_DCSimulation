@@ -11,9 +11,9 @@ public class ServerLoad {
     String IP = null;
     int port = 0;
 
-    public ServerLoad(int load, long timestamp) {
-        set(load, timestamp);
-    }
+//    public ServerLoad(int load, long timestamp) {
+//        set(load, timestamp);
+//    }
 
     public void setIPPort(String IP, int port) {
         this.IP = IP;
@@ -27,7 +27,7 @@ public class ServerLoad {
         }
     }
 
-    public synchronized double getNormalThreshold(ServerLoad[] loads) {
+    public static synchronized double getNormalThreshold(ServerLoad[] loads) {
         int n = loads.length;
         int total = 0;
         for (ServerLoad sl : loads) {
@@ -36,7 +36,7 @@ public class ServerLoad {
         return ((double) total / (double) n);
     }
 
-    public synchronized double getOverloadThreshold(ServerLoad[] loads) {
+    public static synchronized double getOverloadThreshold(ServerLoad[] loads) {
         int n = loads.length;
         int total = 0;
         for (ServerLoad sl : loads) {

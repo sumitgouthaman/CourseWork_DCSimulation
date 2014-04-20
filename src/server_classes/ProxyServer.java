@@ -15,9 +15,9 @@ import java.util.Scanner;
  * @author sumit
  */
 public class ProxyServer {
-
+    
     static Video[] videos;
-
+    
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter port to use for this server:");
@@ -34,12 +34,13 @@ public class ProxyServer {
         int cacheCapacity = sc.nextInt();
         VideoCache cache = new VideoCache(cacheCapacity);
         System.out.println("How many proxy servers are there: ");
-        int noOfOtherServers = sc.nextInt();
+        int noOfProxyServers = sc.nextInt();
         System.out.println("ID of this server: ");
         int thisServerID = sc.nextInt() - 1;
-        ServerLoad[] otherServerLoads = new ServerLoad[noOfOtherServers];
+        ServerLoad[] otherServerLoads = new ServerLoad[noOfProxyServers];
         System.out.println("Enter <IP> <PORT> of other servers:");
-        for (int i = 0; i < noOfOtherServers; i++) {
+        for (int i = 0; i < noOfProxyServers; i++) {
+            otherServerLoads[i] = new ServerLoad();
             if (i == thisServerID) {
                 otherServerLoads[i].setIPPort(IP, port);
                 continue;
@@ -58,7 +59,7 @@ public class ProxyServer {
             Socket s = new Socket(mainServerIP, mainServerPort);
             System.out.println("Connected to main server....");
             Scanner mainServerScanner = new Scanner(s.getInputStream());
-
+            
             ArrayList<Video> videosList = null;
             while (mainServerScanner.hasNextLine()) {
                 String response = mainServerScanner.nextLine();
@@ -88,9 +89,11 @@ public class ProxyServer {
                     }
                 }
             }
-
+            
             s.close();
             sm.setVisible(true);
+            Thread loadsBroadcaster = new ServerLoadsBroadcaster(otherServerLoads, thisServerID, sm);
+            loadsBroadcaster.start();
             try {
                 ServerSocket serverSocket = new ServerSocket(port);
                 while (true) {
@@ -109,6 +112,7 @@ public class ProxyServer {
                         requestSocketScanner.nextLine();
                         requestSocketScanner.close();
                         ServerLoadsUpdateHandler sluh = new ServerLoadsUpdateHandler(data, otherServerLoads);
+                        sluh.setServerMonitor(sm);
                         Thread t = new Thread(sluh);
                         t.start();
                     }
