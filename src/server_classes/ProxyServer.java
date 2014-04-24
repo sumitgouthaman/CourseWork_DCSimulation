@@ -103,7 +103,7 @@ public class ProxyServer {
                     if (HEAD.equalsIgnoreCase("REQUEST-VIDEO")) {
                         int requestVideoID = Integer.parseInt(requestSocketScanner.nextLine());
                         requestSocketScanner.nextLine();
-                        VideoServeThread vst = new VideoServeThread(s, requestVideoID, videos, cache, mainServerIP, mainServerPort);
+                        VideoServeThread vst = new VideoServeThread(s, requestVideoID, videos, cache, mainServerIP, mainServerPort, otherServerLoads);
                         vst.setServerMonitor(sm);
                         Thread t = new Thread(vst);
                         t.start();

@@ -30,8 +30,9 @@ public class ServerLoadsBroadcaster extends Thread {
 
     public void run() {
         try {
+            Thread.sleep(15000);
             while (true) {
-                Thread.sleep(4000 + (int) (2000.0 * Math.random()));
+                Thread.sleep(1000 + (int) (2000.0 * Math.random()));
                 serverLoads[ownID].load = sm.getLoad();
                 serverLoads[ownID].timestamp = System.currentTimeMillis();
                 JSONArray serverLoadsArr = new JSONArray();

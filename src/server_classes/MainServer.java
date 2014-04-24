@@ -89,7 +89,7 @@ public class MainServer {
                 requestSocketScanner.nextLine();
                 int requestVideoID = Integer.parseInt(requestSocketScanner.nextLine());
                 requestSocketScanner.nextLine();
-                VideoServeThread vst = new VideoServeThread(s, requestVideoID, videos, cache, null, 0);
+                VideoServeThread vst = new VideoServeThread(s, requestVideoID, videos, cache, null, 0, null);
                 vst.setServerMonitor(sm);
                 Thread t = new Thread(vst);
                 t.start();

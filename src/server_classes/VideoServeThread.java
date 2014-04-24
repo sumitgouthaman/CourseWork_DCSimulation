@@ -17,14 +17,16 @@ public class VideoServeThread implements Runnable {
     String mainServerIP;
     int mainServerPort;
     ServerMonitor sm = null;
+    ServerLoad[] serverLoads = null;
 
-    public VideoServeThread(Socket s, int videoID, Video[] videos, VideoCache cache, String mainServerIP, int mainServerPort) {
+    public VideoServeThread(Socket s, int videoID, Video[] videos, VideoCache cache, String mainServerIP, int mainServerPort, ServerLoad[] serverLoads) {
         this.s = s;
         this.videos = videos;
         this.cache = cache;
         this.videoID = videoID;
         this.mainServerIP = mainServerIP;
         this.mainServerPort = mainServerPort;
+        this.serverLoads = serverLoads;
     }
 
     public void setServerMonitor(ServerMonitor sm) {
@@ -32,10 +34,33 @@ public class VideoServeThread implements Runnable {
     }
 
     public void run() {
+        System.out.printf("Request for video %d received%n", videoID);
+        if (serverLoads != null) {
+            double normalTh, overloadTh;
+            normalTh = ServerLoad.getNormalThreshold(serverLoads);
+            overloadTh = ServerLoad.getOverloadThreshold(serverLoads);
+            double currentTh = sm.getLoad();
+            if (currentTh > overloadTh) {
+                int index = ServerLoad.getUnderloadedServer(serverLoads);
+                if (index == -1) {
+                    System.out.printf("Couldn't find server to transfer request for video %d%n", videoID);
+                } else {
+                    String transferIP = serverLoads[index].IP;
+                    int transferPort = serverLoads[index].port;
+                    Video target = VideoRequester.fetchVideo(videoID, transferIP, transferPort);
+                    if (target != null) {
+                        System.out.printf("Request for Video %d transferred to server %d%n", videoID, index + 1);
+                        target.transmitWithHeader(s);
+                        return;
+                    }
+                }
+            }
+        }
+
         if (sm != null) {
             sm.newRequest();
         }
-        System.out.printf("Request for video %d received%n", videoID);
+
         Video target = cache.get(videoID);
         if (target != null) {
             target.transmitWithHeader(s);

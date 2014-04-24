@@ -44,4 +44,20 @@ public class ServerLoad {
         }
         return ((double) total / (double) n) * 1.3;
     }
+    
+    public static synchronized int getUnderloadedServer(ServerLoad[] loads){
+        int min = loads[0].load;
+        int minIndex= 0;
+        for(int i=1;i<loads.length;i++){
+            if(loads[i].load<min){
+                min = loads[i].load;
+                minIndex = i;
+            }
+        }
+        if(min<getNormalThreshold(loads)){
+            return minIndex;
+        }else{
+            return -1;
+        }
+    }
 }
